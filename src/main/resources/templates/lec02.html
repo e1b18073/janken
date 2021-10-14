@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security">
 
 <head>
   <meta charset="utf-8">
@@ -18,9 +18,17 @@
     }
   </script>
 
+  <a href="/logout">ログアウト</a>
+
   <h1>Lec02 GET!</h1>
-  <div th:if="${name}">
-    Hi [[${name}]]
+  <div th:if="${entry}">
+    エントリー
+    <ul>
+      <li th:each="user : ${entry.users}">
+        [[${user}]]
+      </li>
+    </ul>
+    Hi [[${entry.userName}]]
   </div>
   <a href="lec02janken?hand=Gu">ぐー</a>
   <a href="lec02janken?hand=Choki">ちょき</a>
