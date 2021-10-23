@@ -23,12 +23,10 @@
   <h1>Lec02 GET!</h1>
   <p th:if="${users}">
     エントリー
-  <div th:each="users:${users}">
-    <tr>
-      <td>ID:[[${users.id}]]</td>
-      <td>ユーザ名:[[${users.name}]]</td>
-    </tr>
-  </div>
+    <li th:each="user : ${users}">
+      <a th:href="@{/match(id=${user.id})}"> [[${user.name}]]
+      </a>
+    </li>
   </p>
   <p th:if="${matches}">
     試合結果
