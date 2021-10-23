@@ -70,10 +70,21 @@ public class Lec02Controller {
    * @return
    */
 
-  @GetMapping("/lec02janken")
-  public String lec02janken(@RequestParam String hand, ModelMap model) {
+  @GetMapping("/matchjanken")
+  public String matchjanken(@RequestParam String hand, ModelMap model, Principal prin) {
+    String loginUser = prin.getName();
+    User user1 = userMapper.selectByName(loginUser);
+    User user2 = userMapper.selectByName("CPU");
     Janken result = new Janken(hand);
     model.addAttribute("result", result);
-    return "lec02.html";
+    Match match = new Match();
+    int id = user1.getId();
+    match.setUser1(id);
+    id = user2.getId();
+    match.setUser2(id);
+    match.setUser1Hand(hand);
+    match.setUser2Hand("Pa");
+    matchMapper.insertMatch(match);
+    return "match.html";
   }
 }

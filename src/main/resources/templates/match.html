@@ -7,12 +7,32 @@
 </head>
 
 <body>
+  <script th:inline="javascript" th:if=${result}>
+    window.onload = function () {
+      var result = [[${ result }]];
+      var result_txt = "";
+      result_txt = "あなたの手 " + result.playerHand + "<br>相手の手 " + result.cpuHand + "<br>結果 " + result.result;
+      document.getElementById("jankenResult").innerHTML = result_txt;
+      console.log(result);
+    }
+  </script>
   <p th:if="${user1}">
   <div th:if="${user2}">
     [[${user1.name}]]<br>
     [[${user2.name}]]<br>
   </div>
   </p>
+  <div>
+    <a href="matchjanken?hand=Gu">ぐー</a>
+    <a href="matchjanken?hand=Choki">ちょき</a>
+    <a href="matchjanken?hand=Pa">ぱー</a>
+  </div>
+  <div th:if="${result}">
+    <span id="jankenResult">
+
+    </span>
+  </div>
+  <a href="/lec02">もどる</a>
 </body>
 
 </html>
