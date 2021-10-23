@@ -30,6 +30,18 @@
     </tr>
   </div>
   </p>
+  <p th:if="${matches}">
+    試合結果
+  <div th:each="matches:${matches}">
+    <tr>
+      <td>ID:[[${matches.id}]]</td>
+      <td>user1:[[${matches.user1}]]</td>
+      <td>User2:[[${matches.user2}]]</td>
+      <td>User1Hand:[[${matches.user1Hand}]]</td>
+      <td>User2Hand:[[${matches.user2Hand}]]</td>
+    </tr>
+  </div>
+  </p>
   <a href="lec02janken?hand=Gu">ぐー</a>
   <a href="lec02janken?hand=Choki">ちょき</a>
   <a href="lec02janken?hand=Pa">ぱー</a>

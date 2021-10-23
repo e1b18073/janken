@@ -13,13 +13,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import oit.is.z1652.kaizi.janken.model.*;
+import oit.is.z1652.kaizi.janken.model.Entry;
+import oit.is.z1652.kaizi.janken.model.Janken;
+import oit.is.z1652.kaizi.janken.model.Match;
+import oit.is.z1652.kaizi.janken.model.MatchMapper;
+import oit.is.z1652.kaizi.janken.model.User;
+import oit.is.z1652.kaizi.janken.model.UserMapper;
 
 @Controller
 public class Lec02Controller {
 
   @Autowired
   UserMapper userMapper;
+  @Autowired
+  MatchMapper matchMapper;
 
   @GetMapping("/lec02")
   @Transactional
@@ -28,8 +35,10 @@ public class Lec02Controller {
     User user = new User();
     user.setName(loginUser);
     userMapper.insertUser(user);
-    ArrayList<User> users = userMapper.selectAllUsers();
-    model.addAttribute("users", users);
+    ArrayList<User> u = userMapper.selectAllUsers();
+    model.addAttribute("users", u);
+    ArrayList<Match> m = matchMapper.selectAllMatches();
+    model.addAttribute("matches", m);
     return "lec02.html";
   }
 
