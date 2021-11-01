@@ -32,11 +32,13 @@ public class Lec02Controller {
   @Transactional
   public String lec02(Principal prin, ModelMap model) {
     String loginUser = prin.getName();
-    User user = new User();
-    user.setName(loginUser);
-    userMapper.insertUser(user);
-    ArrayList<User> u = userMapper.selectAllUsers();
-    model.addAttribute("users", u);
+    if(userMapper.selectByName(loginUser) == null){
+      User user = new User();
+      user.setName(loginUser);
+      userMapper.insertUser(user);
+    }
+    ArrayList<User> users = userMapper.selectAllUsers();
+    model.addAttribute("users", users);
     ArrayList<Match> m = matchMapper.selectAllMatches();
     model.addAttribute("matches", m);
     return "lec02.html";
