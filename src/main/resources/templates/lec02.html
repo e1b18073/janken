@@ -22,16 +22,26 @@
   </p>
 
   <h2>アクティブな試合</h2>
+  <p th:if="${mi}">
+    <div th:each="m:${mi}">
+      <tr>
+        <td>id:[[${m.id}]]</td>
+        <td>user1:[[${m.user1}]]</td>
+        <td>user2:[[${m.user2}]]</td>
+        <td>isActive:[[${m.isActive}]]</td>
+      </tr>
+    </div>
+  </p>
 
   <h2>試合結果</h2>
   <p th:if="${matches}">
   <div th:each="matches:${matches}">
     <tr>
-      <td>ID:[[${matches.id}]]</td>
+      <td>id:[[${matches.id}]]</td>
       <td>user1:[[${matches.user1}]]</td>
-      <td>User2:[[${matches.user2}]]</td>
-      <td>User1Hand:[[${matches.user1Hand}]]</td>
-      <td>User2Hand:[[${matches.user2Hand}]]</td>
+      <td>user2:[[${matches.user2}]]</td>
+      <td>user1Hand:[[${matches.user1Hand}]]</td>
+      <td>user2Hand:[[${matches.user2Hand}]]</td>
     </tr>
   </div>
   </p>
