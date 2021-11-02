@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import oit.is.z1652.kaizi.janken.model.Entry;
 import oit.is.z1652.kaizi.janken.model.Janken;
 import oit.is.z1652.kaizi.janken.model.Match;
+import oit.is.z1652.kaizi.janken.model.MatchInfo;
+import oit.is.z1652.kaizi.janken.model.MatchInfoMapper;
 import oit.is.z1652.kaizi.janken.model.MatchMapper;
 import oit.is.z1652.kaizi.janken.model.User;
 import oit.is.z1652.kaizi.janken.model.UserMapper;
@@ -27,6 +29,8 @@ public class Lec02Controller {
   UserMapper userMapper;
   @Autowired
   MatchMapper matchMapper;
+  @Autowired
+  MatchInfoMapper matchInfoMapper;
 
   @GetMapping("/lec02")
   @Transactional
@@ -51,6 +55,7 @@ public class Lec02Controller {
     User user2 = userMapper.selectById(id);
     model.addAttribute("user1", user1);
     model.addAttribute("user2", user2);
+    model.addAttribute("id", id);
     return "match.html";
   }
 
@@ -73,20 +78,17 @@ public class Lec02Controller {
    */
 
   @GetMapping("/matchjanken")
-  public String matchjanken(@RequestParam String hand, ModelMap model, Principal prin) {
+  public String matchjanken(@RequestParam String hand, @RequestParam Integer id,
+  ModelMap model, Principal prin) {
     String loginUser = prin.getName();
     User user1 = userMapper.selectByName(loginUser);
-    User user2 = userMapper.selectByName("CPU");
-    Janken result = new Janken(hand);
-    model.addAttribute("result", result);
-    Match match = new Match();
-    int id = user1.getId();
-    match.setUser1(id);
-    id = user2.getId();
-    match.setUser2(id);
-    match.setUser1Hand(hand);
-    match.setUser2Hand("Pa");
-    matchMapper.insertMatch(match);
-    return "match.html";
+    MatchInfo m = new MatchInfo();
+    m.setUser1(user1.getId());
+    m.setUser2(id);
+    m.setUser1Hand(hand);
+    m.setIsActive(true);
+    matchInfoMapper.insertMatchinfo(m);
+    model.addAttribute("matchinfo", m);
+    return "wait.html";
   }
 }

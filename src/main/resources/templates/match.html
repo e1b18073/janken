@@ -16,16 +16,17 @@
       console.log(result);
     }
   </script>
+  <a href="/logout">ログアウト</a>
+  <h1>Match</h1>
   <p th:if="${user1}">
   <div th:if="${user2}">
-    [[${user1.name}]]<br>
-    [[${user2.name}]]<br>
+    <h2>[[${user1.name}]] V.S. [[${user2.name}]]</h2>
   </div>
   </p>
-  <div>
-    <a href="matchjanken?hand=Gu">ぐー</a>
-    <a href="matchjanken?hand=Choki">ちょき</a>
-    <a href="matchjanken?hand=Pa">ぱー</a>
+  <div th:if="${id}">
+    <a th:href="@{/matchjanken(id=${id},hand=Gu)}">ぐー</a>
+    <a th:href="@{/matchjanken(id=${id},hand=Choki)}">ちょき</a>
+    <a th:href="@{/matchjanken(id=${id},hand=Pa)}">ぱー</a>
   </div>
   <div th:if="${result}">
     <span id="jankenResult">

@@ -7,29 +7,24 @@
 </head>
 
 <body>
-
-  <script th:inline="javascript" th:if=${result}>
-    window.onload = function () {
-      var result = [[${ result }]];
-      var result_txt = "";
-      result_txt = "あなたの手 " + result.playerHand + "<br>相手の手 " + result.cpuHand + "<br>結果 " + result.result;
-      document.getElementById("jankenResult").innerHTML = result_txt;
-      console.log(result);
-    }
-  </script>
-
   <a href="/logout">ログアウト</a>
 
   <h1>Lec02 GET!</h1>
+  Hi <span sec:authentication="name"></span>
+  <h2>エントリー</h2>
   <p th:if="${users}">
-    エントリー
-    <li th:each="user : ${users}">
-      <a th:href="@{/match(id=${user.id})}"> [[${user.name}]]
-      </a>
-    </li>
+  <ul>
+  <li th:each="user : ${users}">
+    <a th:href="@{/match(id=${user.id})}"> [[${user.name}]]
+    </a>
+  </li>
+  </ul>
   </p>
+
+  <h2>アクティブな試合</h2>
+
+  <h2>試合結果</h2>
   <p th:if="${matches}">
-    試合結果
   <div th:each="matches:${matches}">
     <tr>
       <td>ID:[[${matches.id}]]</td>
@@ -40,15 +35,6 @@
     </tr>
   </div>
   </p>
-  <a href="lec02janken?hand=Gu">ぐー</a>
-  <a href="lec02janken?hand=Choki">ちょき</a>
-  <a href="lec02janken?hand=Pa">ぱー</a>
-
-  <div th:if="${result}">
-    <span id="jankenResult">
-
-    </span>
-  </div>
 </body>
 
 </html>
