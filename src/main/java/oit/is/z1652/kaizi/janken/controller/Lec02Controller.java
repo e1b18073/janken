@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import oit.is.z1652.kaizi.janken.model.Entry;
 import oit.is.z1652.kaizi.janken.model.Janken;
@@ -21,6 +22,7 @@ import oit.is.z1652.kaizi.janken.model.MatchInfoMapper;
 import oit.is.z1652.kaizi.janken.model.MatchMapper;
 import oit.is.z1652.kaizi.janken.model.User;
 import oit.is.z1652.kaizi.janken.model.UserMapper;
+import oit.is.z1652.kaizi.janken.service.AsyncKekka;
 
 @Controller
 public class Lec02Controller {
@@ -31,12 +33,14 @@ public class Lec02Controller {
   MatchMapper matchMapper;
   @Autowired
   MatchInfoMapper matchInfoMapper;
+  @Autowired
+  AsyncKekka kekka;
 
   @GetMapping("/lec02")
   @Transactional
   public String lec02(Principal prin, ModelMap model) {
     String loginUser = prin.getName();
-    if(userMapper.selectByName(loginUser) == null){
+    if (userMapper.selectByName(loginUser) == null) {
       User user = new User();
       user.setName(loginUser);
       userMapper.insertUser(user);
@@ -80,17 +84,36 @@ public class Lec02Controller {
    */
 
   @GetMapping("/matchjanken")
-  public String matchjanken(@RequestParam String hand, @RequestParam Integer id,
-  ModelMap model, Principal prin) {
+  @Transactional
+  public String matchjanken(@RequestParam String hand, @RequestParam Integer id, ModelMap model, Principal prin) {
     String loginUser = prin.getName();
     User user1 = userMapper.selectByName(loginUser);
-    MatchInfo m = new MatchInfo();
-    m.setUser1(user1.getId());
-    m.setUser2(id);
-    m.setUser1Hand(hand);
-    m.setIsActive(true);
-    matchInfoMapper.insertMatchinfo(m);
-    model.addAttribute("matchinfo", m);
+    MatchInfo mi = new MatchInfo();
+    mi.setUser1(user1.getId());
+    mi.setUser2(id);
+    mi.setUser1Hand(hand);
+    mi.setIsActive(true);
+    if (matchInfoMapper.selectByMatchInfo(mi) == null) {
+      matchInfoMapper.insertMatchinfo(mi);
+    } else {
+      MatchInfo mi2 = matchInfoMapper.selectByMatchInfo(mi);
+      Match m = new Match();
+      m.setUser1(mi2.getUser2());
+      m.setUser2(mi2.getUser1());
+      m.setUser1Hand(hand);
+      m.setUser2Hand(mi2.getUser1Hand());
+      m.setIsActive(true);
+      Match match = kekka.syncMatch(m);
+      matchInfoMapper.updateById(mi2);
+      model.addAttribute("match", match);
+    }
     return "wait.html";
+  }
+
+  @GetMapping("/step9")
+  public SseEmitter sample59() {
+    final SseEmitter sseEmitter = new SseEmitter();
+    this.kekka.asyncShowMatch(sseEmitter);
+    return sseEmitter;
   }
 }
